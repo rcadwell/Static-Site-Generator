@@ -31,3 +31,22 @@ def generate_page(from_path, template_path, dest_path):
     # 7. Write the final HTML to the destination
     with open(dest_path, "w") as f:
         f.write(template)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    # 1. Iterate over every entry in the content directory
+    for filename in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+
+        # 2. If it's a file, check if it's markdown
+        if os.path.isfile(from_path):
+            if filename.endswith(".md"):
+                # Change the extension to .html for the destination
+                dest_html_path = dest_path.replace(".md", ".html")
+                generate_page(from_path, template_path, dest_html_path)
+        
+        # 3. If it's a directory, create the destination directory and recurse
+        else:
+            # We don't need to manually create the directory here 
+            # because generate_page already uses os.makedirs!
+            generate_pages_recursive(from_path, template_path, dest_path)
