@@ -1,5 +1,11 @@
 import unittest
-from block_markdown import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node
+from block_markdown import (
+    markdown_to_blocks, 
+    block_to_block_type, 
+    BlockType, 
+    markdown_to_html_node,
+    extract_title
+)
 
 class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -77,6 +83,15 @@ This is the same paragraph on a new line
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+    def test_extract_title(self):
+        self.assertEqual(extract_title("# Hello"), "Hello")
+        self.assertEqual(extract_title("#   Hello  "), "Hello")
+        self.assertEqual(extract_title("\n\n# Title"), "Title")
+        with self.assertRaises(Exception):
+            extract_title("## This is an H2, not an H1")
+        with self.assertRaises(Exception):
+            extract_title("Just some text")
 
 if __name__ == "__main__":
     unittest.main()

@@ -146,3 +146,10 @@ def create_paragraph_node(block):
     paragraph = " ".join(line.strip() for line in lines)
     children = text_to_children(paragraph)
     return ParentNode("p", children)
+
+def extract_title(markdown):
+    lines = markdown.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:].strip()
+    raise Exception("No h1 header found")
